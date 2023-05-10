@@ -1,0 +1,1324 @@
+{
+	"info": {
+		"_postman_id": "0a52b1fd-a30b-4c42-ae0c-8f220497a489",
+		"name": "fiscobcos3.0 rpc",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26671222"
+	},
+	"item": [
+		{
+			"name": "getObserverList",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//Test the response body",
+							"pm.test(\"Response has id, jsonrpc and result\", function(){",
+							"    pm.response.to.have.jsonBody(\"id\");",
+							"    pm.response.to.have.jsonBody(\"jsonrpc\");",
+							"    pm.response.to.have.jsonBody(\"result\");",
+							"});",
+							"",
+							"// test at least one consensus node",
+							"pm.test(\"Result array contains only one element\", function(){",
+							"    const result = pm.response.json().result;",
+							"    pm.expect(result.length).to.be.at.least(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getObserverList\",\n    \"params\":[1],\n    \"id\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:20200",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "20200"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getSealerList",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"test getSealer\", function(){",
+							"    pm.response.to.have.status(200);",
+							"    pm.response.to.have.jsonBody(\"result\");",
+							"    pm.expect(pm.response.text()).to.include(\"nodeID\");",
+							"    pm.expect(pm.response.text()).to.include(\"weight\");",
+							"",
+							"});",
+							"",
+							"//Test the response body",
+							"pm.test(\"Response has id, jsonrpc and result\", function(){",
+							"    pm.response.to.have.jsonBody(\"id\");",
+							"    pm.response.to.have.jsonBody(\"jsonrpc\");",
+							"    pm.response.to.have.jsonBody(\"result\");",
+							"});",
+							"",
+							"// test at least one consensus node",
+							"pm.test(\"Result array contains only one element\", function(){",
+							"    const result = pm.response.json().result;",
+							"    pm.expect(result.length).to.be.at.least(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getSealerList\",\n    \"params\":[1],\n    \"id\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:20200",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "20200"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getBlockNumber",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"test getBlockNumber\", function(){",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"result is >= 0\", function () {",
+							"    pm.expect(pm.response.json().result).to.at.least(0);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getBlockNumber\",\n    \"params\":[\"group0\",\"node0\"],\n    \"id\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:20200",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "20200"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getTotalTransactionCount",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response should be in JSON format\", function () { ",
+							"    pm.response.to.be.json; ",
+							"});",
+							"",
+							"pm.test(\"Block number should be a positive integer\", function () { ",
+							"    var jsonData = pm.response.json(); ",
+							"    pm.expect(jsonData.result.blockNumber).to.at.least(0); ",
+							"});",
+							"",
+							"pm.test(\"Failed transaction count should be an integer\", function () { ",
+							"    var jsonData = pm.response.json(); ",
+							"    pm.expect(jsonData.result.failedTransactionCount).to.be.an('number'); ",
+							"});",
+							"",
+							"pm.test(\"Transaction count should be an integer\", function () { var jsonData = pm.response.json(); pm.expect(jsonData.result.transactionCount).to.be.an('number'); });"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getTotalTransactionCount\",\n    \"params\":[\"group0\",\"node0\"],\n    \"id\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:20200",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "20200"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getBlockByNumber",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response has result object\", function () {",
+							"    pm.response.to.have.jsonBody(\"result\");",
+							"});",
+							"",
+							"pm.test(\"Result object should have consensusWeights array\", function () {",
+							"    const result = pm.response.json().result;",
+							"    pm.expect(result.consensusWeights).to.be.an('array').lengthOf.that.is.at.least(0);",
+							"});",
+							"",
+							"pm.test(\"Result object should have extraData property with a value of '0x'\", function () {",
+							"    const result = pm.response.json().result;",
+							"    pm.expect(result.extraData).to.be.a('string');",
+							"});",
+							"",
+							"pm.test(\"Result object should have gasUsed property with a value of '0'\", function () {",
+							"    const result = pm.response.json().result;",
+							"    pm.expect(result.gasUsed).to.equal(\"0\");",
+							"});",
+							"",
+							"pm.test(\"Result object should have hash property with a valid hash value\", function () {",
+							"    const result = pm.response.json().result;",
+							"    pm.expect(result.hash).to.match(/0x[0-9a-f]{64}/);",
+							"});",
+							"",
+							"pm.test(\"Result object should have number property with a valid block number\", function () {",
+							"    const result = pm.response.json().result;",
+							"    pm.expect(result.number).to.be.a('number').that.is.at.least(0);",
+							"});",
+							"",
+							"pm.test(\"Result object should have parentInfo array with 1 element\", function () {",
+							"    const result = pm.response.json().result;",
+							"    pm.expect(result.parentInfo).to.be.an('array');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Result object should have receiptsRoot property with a valid hash value\", function () {",
+							"    const result = pm.response.json().result;",
+							"    pm.expect(result.receiptsRoot).to.match(/0x[0-9a-f]{64}/);",
+							"});",
+							"",
+							"pm.test(\"Result object should have sealer property with a valid sealer index\", function () {",
+							"    const result = pm.response.json().result;",
+							"    pm.expect(result.sealer).to.be.a('number').that.is.at.least(0);",
+							"});",
+							"",
+							"pm.test(\"Result object should have stateRoot property with a valid hash value\", function () {",
+							"    const result = pm.response.json().result;",
+							"    pm.expect(result.stateRoot).to.match(/0x[0-9a-f]{64}/);",
+							"});",
+							"",
+							"pm.test(\"Result object should have transactions array with 1 element\", function () {",
+							"    const result = pm.response.json().result;",
+							"    pm.expect(result.transactions).to.be.an('array');",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getBlockByNumber\",\n    \"params\":[\"group0\",\"node0\",0,false,false],\n    \"id\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:20200",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "20200"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getBlockByHash",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Error message is GetBlockNumberByHash error\", function () { ",
+							"    const error = pm.response.json().error;",
+							"    pm.expect(pm.response.json()).to.have.keys(['error', 'id', 'jsonrpc']);",
+							"    pm.expect(pm.response.json().error).to.have.keys(['code', 'message']);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getBlockByHash\",\n    \"params\":[\"group0\",\"node0\",\"0x\",true,true],\n    \"id\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:20200",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "20200"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getBlockHashByNumber",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has a valid result format\", function () {",
+							"    pm.expect(pm.response.json().result).to.match(/^0x[0-9a-fA-F]+$/); ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getBlockHashByNumber\",\n    \"params\":[\"group0\",\"node0\",4],\n    \"id\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:20200",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "20200"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getTransaction",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Error code is 3008\", function () { ",
+							"    pm.expect(pm.response.json().error.code).to.eql(3008); ",
+							"});",
+							"",
+							"pm.test(\"Error message is GetBatchTxsByHashList error\", function () { ",
+							"    pm.expect(pm.response.json().error.message).to.eql(\"GetBatchTxsByHashList error\"); ",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getTransaction\",\n    \"params\":[\"group0\",\"node0\",\"0x\",false],\n    \"id\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:20200",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "20200"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getTransactionReceipt",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Check if response has an error property",
+							"pm.test(\"Response has error property\", function () {",
+							"    pm.expect(pm.response.json()).to.have.property(\"error\");",
+							"});",
+							"",
+							"// Check if error code is 3008",
+							"pm.test(\"Error code is 3008\", function () {",
+							"    pm.expect(pm.response.json().error.code).to.eql(3008);",
+							"});",
+							"",
+							"// Check if message is 'GetTransactionReceiptByHash'",
+							"pm.test(\"Message is 'GetTransactionReceiptByHash'\", function () {",
+							"    pm.expect(pm.response.json().error.message).to.eql(\"GetTransactionReceiptByHash\");",
+							"});",
+							"",
+							"// Check if status code is 200",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getTransactionReceipt\",\n    \"params\":[\"group0\",\"node0\",\"0xd12357d4a81bfe2c9b9cc83fde7576a8ae8dede910b70cdf9abed71a32ed10bf\",true],\n    \"id\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:20200",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "20200"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getPendingTxSize",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test for successful response",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Test for successful result",
+							"pm.test(\"Result is successful\", function () {",
+							"    pm.response.to.have.jsonBody('result');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getPendingTxSize\",\n    \"params\":[\"group0\",\"node0\"],\n    \"id\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:20200",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "20200"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getPeers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Response Tests",
+							"pm.test(\"Response is OK\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"response includes a result object with required keys\", function () {",
+							"    var result = pm.response.json().result;",
+							"    pm.expect(result).to.have.property(\"endPoint\");",
+							"    pm.expect(result).to.have.property(\"groupNodeIDInfo\");",
+							"    pm.expect(result).to.have.property(\"p2pNodeID\");",
+							"    pm.expect(result).to.have.property(\"peers\");",
+							"});",
+							"",
+							"pm.test(\"groupNodeIDInfo contains an array of groups with nodeIDList arrays\", function () {",
+							"    var groupNodeIDInfo = pm.response.json().result.groupNodeIDInfo;",
+							"    pm.expect(groupNodeIDInfo).to.be.an(\"array\");",
+							"    groupNodeIDInfo.forEach(function (group) {",
+							"        pm.expect(group).to.have.property(\"group\");",
+							"        pm.expect(group).to.have.property(\"nodeIDList\").that.is.an(\"array\");",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"peers contains an array of objects with required keys\", function () {",
+							"    var peers = pm.response.json().result.peers;",
+							"    pm.expect(peers).to.be.an(\"array\");",
+							"    peers.forEach(function (peer) {",
+							"        pm.expect(peer).to.have.property(\"endPoint\");",
+							"        pm.expect(peer).to.have.property(\"groupNodeIDInfo\");",
+							"        pm.expect(peer).to.have.property(\"p2pNodeID\");",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getPeers\",\n    \"params\":[\"127.0.0.1:20200\"],\n    \"id\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:20200",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "20200"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getSyncStatus",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"return valid JSON response\", function () {",
+							"    pm.response.to.be.ok;",
+							"    pm.response.to.have.jsonBody;",
+							"});",
+							"",
+							"pm.test(\"contain result field\", function () {",
+							"    pm.expect(pm.response.json()).to.have.property('result');",
+							"});",
+							"",
+							"pm.test(\"result contain blockNumber field\", function () {",
+							"    pm.expect(pm.response.json().result).include('blockNumber');",
+							"});",
+							"",
+							"//检查result字段是否包含genesisHash字段",
+							"pm.test(\"result contain genesisHash field\", function () {",
+							"    pm.expect(pm.response.json().result).include('genesisHash');",
+							"});",
+							"",
+							"//检查result字段是否包含isSyncing字段",
+							"pm.test(\"result contain isSyncing field\", function () {",
+							"    pm.expect(pm.response.json().result).include('isSyncing');",
+							"});",
+							"",
+							"//检查result字段是否包含knownHighestNumber字段",
+							"pm.test(\"result contain knownHighestNumber field\", function () {",
+							"    pm.expect(pm.response.json().result).include('knownHighestNumber');",
+							"});",
+							"",
+							"//检查result字段是否包含knownLatestHash字段",
+							"pm.test(\"result contain knownLatestHash field\", function () {",
+							"    pm.expect(pm.response.json().result).include('knownLatestHash');",
+							"});",
+							"",
+							"//检查result字段是否包含latestHash字段",
+							"pm.test(\"result contain latestHash字 field\", function () {",
+							"    pm.expect(pm.response.json().result).include('latestHash');",
+							"});",
+							"",
+							"//检查result字段是否包含nodeID字段",
+							"pm.test(\"result contain nodeID field\", function () {",
+							"    pm.expect(pm.response.json().result).include('nodeID');",
+							"});",
+							"",
+							"//检查result字段是否包含peers字段",
+							"pm.test(\"result contain peers field\", function () {",
+							"    pm.expect(pm.response.json().result).include('peers');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getSyncStatus\",\n    \"params\":[\"group0\"],\n    \"id\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:20200",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "20200"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getSystemConfigByKey",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response includes blockNumber field\", function () {",
+							"    pm.expect(pm.response.json().result).to.have.property(\"blockNumber\");",
+							"});",
+							"",
+							"pm.test(\"Response includes value field\", function () {",
+							"    pm.expect(pm.response.json().result).to.have.property(\"value\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getSystemConfigByKey\",\n    \"params\":[\"group0\",\"node0\",\"tx_count_limit\"],\n    \"id\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:20200",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "20200"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getPbftView",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response should have 'result' field\", function () {",
+							"    pm.expect(pm.response.json()).to.include.keys(\"result\");",
+							"});",
+							"",
+							"pm.test(\"Response should have 'result' field\", function () {",
+							"    pm.expect(pm.response.json().result).to.be.a(\"number\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getPbftView\",\n    \"params\":[\"group0\",\"node0\"],\n    \"id\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:20200",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "20200"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getConsensusStatus",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is valid JSON\", function () {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Result includes blockNumber\", function () { ",
+							"    pm.expect(pm.response.json().result).to.include(\"blockNumber\"); ",
+							"});",
+							"",
+							"pm.test(\"Result includes consensusNodeList\", function () { ",
+							"    pm.expect(pm.response.json().result).to.include(\"consensusNodeList\");",
+							"});",
+							"",
+							"pm.test(\"Result includes nodeID\", function () { ",
+							"    pm.expect(pm.response.json().result).to.include(\"nodeID\"); ",
+							"});",
+							"",
+							"pm.test(\"Result includes weight\", function () { ",
+							"    pm.expect(pm.response.json().result).to.include(\"weight\"); ",
+							"});",
+							"",
+							"pm.test(\"Result includes hash\", function () { ",
+							"    pm.expect(pm.response.json().result).to.include(\"hash\"); ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getConsensusStatus\",\n    \"params\":[\"group0\",\"node0\"],\n    \"id\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:20200",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "20200"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getGroupInfo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Check if the response is valid JSON",
+							"pm.test(\"Valid JSON response\", function() {",
+							"    pm.response.to.have.jsonBody();",
+							"});",
+							"",
+							"// Check if the response has a result",
+							"pm.test(\"Response has result\", function() {",
+							"    pm.response.to.have.jsonBody(\"result\");",
+							"});",
+							"",
+							"// Check if the response is successful ",
+							"pm.test(\"Status code is 200\", function () { ",
+							"    pm.response.to.have.status(200); ",
+							"});",
+							"",
+							"// Check if the chainID is correct",
+							"pm.test(\"Correct chainID\", function() {",
+							"    pm.expect(pm.response.json().result.chainID).to.eql(\"chain0\");",
+							"});",
+							"",
+							"// Check if the groupID is correct",
+							"pm.test(\"Correct groupID\", function() {",
+							"    pm.expect(pm.response.json().result.groupID).to.eql(\"group0\");",
+							"});",
+							"",
+							"// Check if the nodeList is an array",
+							"pm.test(\"nodeList is an array\", function() {",
+							"    pm.expect(pm.response.json().result.nodeList).to.be.an(\"array\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getGroupInfo\",\n    \"params\":[\"group0\",\"node1\"],\n    \"id\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:20200",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "20200"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getGroupList",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response has result\", function () {",
+							"    pm.response.to.have.jsonBody(\"result\");",
+							"});",
+							"",
+							"pm.test(\"Response code is 0\", function () {",
+							"    pm.response.to.have.jsonBody(\"result.code\", 0);",
+							"});",
+							"",
+							"pm.test(\"Response has groupList\", function () {",
+							"    pm.response.to.have.jsonBody(\"result.groupList\");",
+							"});",
+							"",
+							"pm.test(\"Response has msg\", function () {",
+							"    pm.response.to.have.jsonBody(\"result.msg\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getGroupList\",\n    \"params\":[\"group0\",\"node1\"],\n    \"id\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:20200",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "20200"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getGroupInfoList",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response contains result key and value is an array\", function () {",
+							"    const res = pm.response.json();",
+							"",
+							"    pm.expect(res.result).to.be.an(\"array\");",
+							"});",
+							"",
+							"pm.test(\"Response body should contain 'chainID'\", function () { ",
+							"    var jsonData = pm.response.json(); ",
+							"    pm.expect(jsonData.result[0].chainID).to.exist; });",
+							"",
+							"pm.test(\"Response body should contain 'genesisConfig'\", function () { ",
+							"    var jsonData = pm.response.json(); ",
+							"    pm.expect(jsonData.result[0].genesisConfig).to.exist; });",
+							"",
+							"pm.test(\"Response body should contain 'groupID'\", function () { ",
+							"    var jsonData = pm.response.json(); ",
+							"    pm.expect(jsonData.result[0].groupID).to.exist; });",
+							"",
+							"pm.test(\"Response body should contain 'nodeList'\", function () { ",
+							"    var jsonData = pm.response.json(); ",
+							"    pm.expect(jsonData.result[0].nodeList).to.exist; });"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getGroupInfoList\",\n    \"params\":[\"group0\",\"node1\"],\n    \"id\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:20200",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "20200"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getGroupPeers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Result should be an array\", function () { pm.expect(jsonData.result).to.be.an(\"array\"); });",
+							"",
+							"pm.test(\"Result should be an array with at least 1 elements\", function () { pm.expect(jsonData.result).lengthOf.that.is.at.least(1); });"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getGroupPeers\",\n    \"params\":[\"group0\",\"node1\"],\n    \"id\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:20200",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "20200"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getGroupNodeInfo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response has null result\", function () { ",
+							"    pm.expect(pm.response.json().result).to.eql(null);",
+							" });"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getGroupNodeInfo\",\n    \"params\":[\"group0\",\"node0\"],\n    \"id\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:20200",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "20200"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "call",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Error message is displayed\", function () {",
+							"    pm.expect(pm.response.json().error.message).to.eql(\"Call address is empty\");",
+							"});",
+							"",
+							"pm.test(\"Error code is correct\", function () {",
+							"    pm.expect(pm.response.json().error.code).to.eql(-70000);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"call\",\n    \"params\":[\"group0\",\"\",\"\",\"aaaa\"],\n    \"id\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:20200",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "20200"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sendTransaction",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response is an object\", function () {",
+							"    pm.expect(typeof pm.response.json() === \"object\").to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Response has an error object\", function () {",
+							"    pm.expect(pm.response.json().error).to.exist;",
+							"});",
+							"",
+							"pm.test(\"Error code is -1\", function () {",
+							"    pm.expect(pm.response.json().error.code).to.equal(-1);",
+							"});",
+							"",
+							"pm.test(\"Error message contains 'Unexpect hex string'\", function () {",
+							"    pm.expect(pm.response.json().error.message).to.include(\"Unexpect hex string\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"sendTransaction\",\n    \"params\":[\"group0\",\"0x\"],\n    \"id\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:20200",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "20200"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getCode",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 OK\", function () {",
+							"   pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response body has a JSON RPC property\", function () {",
+							"   pm.response.to.have.jsonBody(\"jsonrpc\");",
+							"});",
+							"",
+							"pm.test(\"Response body has a result property\", function () {",
+							"   pm.response.to.have.jsonBody(\"result\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getCode\",\n    \"params\":[\"group0\",\"node0\",\"0x\"],\n    \"id\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:20200",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "20200"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getABI",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 OK\", function () {",
+							"   pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response body has a JSON RPC property\", function () {",
+							"   pm.response.to.have.jsonBody(\"jsonrpc\");",
+							"});",
+							"",
+							"pm.test(\"Response body has a result property\", function () {",
+							"   pm.response.to.have.jsonBody(\"result\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getABI\",\n    \"params\":[\"group0\",\"node0\",\"0x\"],\n    \"id\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:20200",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "20200"
+				}
+			},
+			"response": []
+		}
+	]
+}
