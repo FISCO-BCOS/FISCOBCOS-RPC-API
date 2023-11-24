@@ -435,9 +435,13 @@
 							"pm.test(\"检查字段值\", function () {",
 							"    const result = jsonData.result;",
 							"    pm.expect(result.blockNumber).to.equal(1);",
+							"    pm.expect(result.checksumContractAddress).to.match(/^0x[0-9a-fA-F]+$/);",
+							"    pm.expect(result.contractAddress).to.match(/^0x[0-9a-f]+$/);",
 							"    pm.expect(result.extraData).to.equal(\"\");",
-							"    pm.expect(result.hash).to.match(/^0x[0-9a-fA-F]+$/); ",
-							"    pm.expect(result.transactionHash).to.match(/^0x[0-9a-fA-F]+$/);",
+							"    pm.expect(result.from).to.match(/^0x[0-9a-f]+$/);",
+							"    pm.expect(result.hash).to.match(/^0x[0-9a-f]+$/);",
+							"    pm.expect(result.input).to.match(/^0x[0-9a-f]+$/);",
+							"    pm.expect(result.transactionHash).to.match(/^0x[0-9a-f]+$/);",
 							"",
 							"});",
 							""
@@ -511,7 +515,14 @@
 							"    pm.expect(result.to).to.be.a(\"string\");",
 							"    pm.expect(result.version).to.be.a(\"number\");",
 							"});",
-							""
+							"",
+							"pm.test(\"getTransaction返回字段正则表达式匹配检查\",function () {",
+							"    const result = jsonData.result; ",
+							"    pm.expect(result.from).to.match(/^0x[0-9a-f]+$/);",
+							"    pm.expect(result.hash).to.match(/^0x[0-9a-f]+$/);",
+							"    pm.expect(result.input).to.match(/^0x[0-9a-f]+$/);",
+							"    pm.expect(result.signature).to.match(/^0x[0-9a-f]+$/);",
+							"});"
 						],
 						"type": "text/javascript"
 					}
@@ -585,7 +596,15 @@
 							"    pm.expect(result.version).to.be.a(\"number\");",
 							"});",
 							"",
-							""
+							"pm.test(\"正则表达式匹配检查\",function () {",
+							"    const result = jsonData.result; ",
+							"    pm.expect(result.checksumContractAddress).to.match(/^0x[0-9a-fA-F]+$/);",
+							"    pm.expect(result.contractAddress).to.match(/^0x[0-9a-f]+$/);",
+							"    pm.expect(result.from).to.match(/^0x[0-9a-f]+$/);",
+							"    pm.expect(result.hash).to.match(/^0x[0-9a-f]+$/);",
+							"    pm.expect(result.input).to.match(/^0x[0-9a-f]+$/);",
+							"    pm.expect(result.transactionHash).to.match(/^0x[0-9a-f]+$/);",
+							"});"
 						],
 						"type": "text/javascript"
 					}
@@ -1251,12 +1270,10 @@
 							"    pm.response.to.have.status(200);",
 							"});",
 							"",
-							"pm.test(\"Error message is displayed\", function () {",
-							"    pm.expect(pm.response.json().error.message).to.eql(\"Call address is empty\");",
-							"});",
-							"",
-							"pm.test(\"Error code is correct\", function () {",
-							"    pm.expect(pm.response.json().error.code).to.eql(-70000);",
+							"pm.test(\"检查call返回字段合法性\", function () {",
+							"pm.expect(pm.response.json().result.blockNumber).to.be.a('number');",
+							"pm.expect(pm.response.json().result.output).to.be.a('string');",
+							"pm.expect(pm.response.json().result.status).to.be.a('number');",
 							"});",
 							""
 						],
@@ -1269,7 +1286,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"call\",\n    \"params\":[\"group0\",\"\",\"\",\"aaaa\"],\n    \"id\":1\n}",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"call\",\n    \"params\":[\"group0\",\"\",\"0x6849f21d1e455e9f0712b1e99fa4fcd23758e8f1\",\"aaaa\"],\n    \"id\":1\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1300,13 +1317,8 @@
 							"   pm.response.to.have.status(200);",
 							"});",
 							"",
-							"",
-							"pm.test(\"Response body has a JSON RPC property\", function () {",
-							"   pm.response.to.have.jsonBody(\"jsonrpc\");",
-							"});",
-							"",
-							"pm.test(\"Response body has a result property\", function () {",
-							"   pm.response.to.have.jsonBody(\"result\");",
+							"pm.test(\"检查getCode返回字段合法性\", function () {",
+							"pm.expect(pm.response.json().result).to.match(/^0x[0-9a-f]+$/);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -1318,7 +1330,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getCode\",\n    \"params\":[\"group0\",\"node0\",\"0x\"],\n    \"id\":1\n}",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getCode\",\n    \"params\":[\"group0\",\"node0\",\"0x6849f21d1e455e9f0712b1e99fa4fcd23758e8f1\"],\n    \"id\":1\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1349,13 +1361,8 @@
 							"   pm.response.to.have.status(200);",
 							"});",
 							"",
-							"",
-							"pm.test(\"Response body has a JSON RPC property\", function () {",
-							"   pm.response.to.have.jsonBody(\"jsonrpc\");",
-							"});",
-							"",
-							"pm.test(\"Response body has a result property\", function () {",
-							"   pm.response.to.have.jsonBody(\"result\");",
+							"pm.test(\"检查getABI返回字段合法性\", function () {",
+							"pm.expect(pm.response.json().result).to.be.an('string');",
 							"});"
 						],
 						"type": "text/javascript"
@@ -1367,7 +1374,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getABI\",\n    \"params\":[\"group0\",\"node0\",\"0x\"],\n    \"id\":1\n}",
+					"raw": "{\n    \"jsonrpc\":2.0,\n    \"method\": \"getABI\",\n    \"params\":[\"group0\",\"node0\",\"0x6849f21d1e455e9f0712b1e99fa4fcd23758e8f1\"],\n    \"id\":1\n}",
 					"options": {
 						"raw": {
 							"language": "json"
